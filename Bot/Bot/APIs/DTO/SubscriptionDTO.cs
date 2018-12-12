@@ -4,7 +4,7 @@ using System.Text;
 
 namespace Bot.APIs.DTO
 {
-    public class SubscriptionDTO: DTO
+    public class SubscriptionDTO
     {
        
     }

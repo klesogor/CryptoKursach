@@ -13,44 +13,22 @@ namespace Bot.Routers
     {
         //binded routes
         private readonly List<Route> _routes = new List<Route>();
-        private readonly Dictionary<string, IService> _services = new Dictionary<string, IService>();
-        public IRouterExpressionParser _parser { get; set; } = new RouteExpressionParser();
-        private static IRouter _instance;
+        public readonly IRouterExpressionParser _parser;
 
-        private Router()
+        public Router(IRouterExpressionParser parser)
         {
-
+            _parser = parser;
         }
 
-        public static IRouter GetInstance()
+        public IRouter Bind(string command, Func<ParameterBag,IReply> action, string name = null)
         {
-            if (_instance == null)
-                _instance = new Router();
-            return _instance;
-        }
-
-        public void AddServices(IEnumerable<IService> services)
-        {
-            foreach (var service in services)
-            {
-                _services.Add(service.GetType().Name, service);
-            }
-        }
-
-        public IRouter Bind(string command, string action, string name = null)
-        {
-            var (instance, method) = _getBindingsForRoute(action);
-            object cb(ParameterBag bag) => method.Invoke(
-                    instance,
-                    new object[] { bag }
-                );
-            var debug = _parser.parseExpression(command);
+  
             _routes.Add(
                 new Route() {
                     Name = name,
                     RawRoute = command,
                     CompiledRoute = _parser.parseExpression(command),
-                    Handler = cb
+                    Handler = action
                 }
             );
             return this;
@@ -62,7 +40,7 @@ namespace Bot.Routers
             {
                 var match = Regex.Match(route, router.CompiledRoute);
                 if (match.Success) {
-                    return (IReply)router.Handler(_parseParams(match));
+                    return router.Handler(_parseParams(match));
                 }
             }
 
@@ -72,17 +50,6 @@ namespace Bot.Routers
         public Route GetRouteByName(string name)
         {
             return _routes.Find(x => x.Name == name);
-        }
-
-        private (IService instance, MethodInfo method) _getBindingsForRoute(string route)
-        {
-            var splitedRoute = route.Split('@');
-            _services.TryGetValue(splitedRoute[0], out IService service);
-            if (service is null) throw new RouteHandlerException();
-            var methodInfo = service.GetType().GetMethod(splitedRoute[1]);
-            if (methodInfo is null) throw new RouteHandlerException();
-
-            return (instance: service, method: methodInfo);
         }
 
         private ParameterBag _parseParams(Match matches)

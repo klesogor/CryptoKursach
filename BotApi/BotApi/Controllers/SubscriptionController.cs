@@ -1,5 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 using BotApi.Data;
@@ -22,9 +21,9 @@ namespace BotApi.Controllers
 
         // GET api/subscription
         [HttpGet]
-        public async Task<ActionResult<IEnumerable<string>>> GetAvailable()
+        public async Task<ActionResult<JsonResult>> GetAvailable()
         {
-            return Ok(new AvailableSubscriptionResponse()
+            return new JsonResult(new AvailableSubscriptionResponse()
             {
                 Success = true,
                 Currencies = await _service.GetAvailableCurrencies()
@@ -33,9 +32,9 @@ namespace BotApi.Controllers
 
         // GET api/subscription/5
         [HttpGet("{id}")]
-        public async Task<ActionResult<IEnumerable<Subscription>>> Get(int id)
+        public async Task<ActionResult<JsonResult>> Get(int id)
         {
-            return Ok(await _service.GetSubscriptionsByUser(id));
+            return new JsonResult(await _service.GetSubscriptionsByUser(id));
         }
 
         // POST api/subscription

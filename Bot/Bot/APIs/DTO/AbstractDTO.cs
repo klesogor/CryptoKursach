@@ -4,8 +4,8 @@ using System.Text;
 
 namespace Bot.APIs.DTO
 {
-    public abstract class DTO
+    public abstract class AbstractDTO
     {
-        public bool Success { get; set; }
+        
     }
 }

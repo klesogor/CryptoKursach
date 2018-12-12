@@ -1,4 +1,5 @@
 ﻿using Bot.APIs;
+using Bot.Bot;
 using Bot.Routers;
 using Bot.Services;
 using System;
@@ -9,13 +10,21 @@ namespace Bot
 {
     public class AppInitializer
     {
-        public IRouter init()
+        protected RateService RateService { get; set; }
+        protected SubscriptionService SubscriptionService { get; set; }
+        public IRouter Init()
         {
-            var API = new ApiMock();
-            var services = new IService[] { new RateService(API), new SubscriptionService(API) };
-            var router = Router.GetInstance();
-            router.AddServices(services);
+            var API = new AspNetApi();
+            SubscriptionService =  new SubscriptionService(API);
+
+            var router = new Router(new RouteExpressionParser());
+            _bindRoutes(router);
             return router;
+        }
+
+        public void _bindRoutes(IRouter router)
+        {
+            router.Bind("/subscribe", SubscriptionService.GetAvailableCurrencies);
         }
     }
 }

@@ -10,6 +10,6 @@ namespace Bot.APIs
     {
         Task<SubscriptionDTO> AddSubscription(int userId, int currencyId, int marketId);
         Task<CurrencyRateDTO> GetCurrencyRate(int currencyId);
-
+        Task<AvailableCurrenciesDTO> GetAvailableCurrencies();
     }
 }

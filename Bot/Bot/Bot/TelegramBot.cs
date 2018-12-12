@@ -14,7 +14,6 @@ namespace Bot.Bot
         private readonly string _PKEY;
         private readonly IRouter _router;
         private ITelegramBotClient _bot;
-        private object IMarkupResponse;
 
         public TelegramBot(string PKEY, IRouter router)
         {

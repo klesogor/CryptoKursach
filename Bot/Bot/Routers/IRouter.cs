@@ -8,12 +8,10 @@ namespace Bot.Routers
 {
     public interface IRouter
     {
-        IRouter Bind(string route, string action, string name = null);
+        IRouter Bind(string route, Func<ParameterBag,IReply> action, string name = null);
 
         IReply Dispatch(string route);
 
         Route GetRouteByName(string name);
-
-        void AddServices(IEnumerable<IService> services);
     }
 }
