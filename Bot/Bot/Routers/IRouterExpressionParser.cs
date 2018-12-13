@@ -6,6 +6,6 @@ namespace Bot.Routers
 {
     public interface IRouterExpressionParser
     {
-        string parseExpression(string command);
+        string ParseExpression(string command);
     }
 }

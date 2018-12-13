@@ -27,7 +27,7 @@ namespace Bot.Routers
                 new Route() {
                     Name = name,
                     RawRoute = command,
-                    CompiledRoute = _parser.parseExpression(command),
+                    CompiledRoute = _parser.ParseExpression(command),
                     Handler = action
                 }
             );

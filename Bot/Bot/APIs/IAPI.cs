@@ -9,7 +9,7 @@ namespace Bot.APIs
     public interface IAPI
     {
         Task<SubscriptionDTO> AddSubscription(int userId, int currencyId, int marketId);
-        Task<CurrencyRateDTO> GetCurrencyRate(int currencyId);
+        Task<CurrencyRateDTO> GetCurrencyRate(int currencyId, int? marketId = null);
         Task<AvailableCurrenciesDTO> GetAvailableCurrencies();
     }
 }

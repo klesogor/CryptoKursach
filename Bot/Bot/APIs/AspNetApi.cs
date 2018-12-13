@@ -26,7 +26,7 @@ namespace Bot.APIs
             return JsonConvert.DeserializeObject<Response<AvailableCurrenciesDTO>>(resultString).Value;
         }
 
-        public Task<CurrencyRateDTO> GetCurrencyRate(int currencyId)
+        public Task<CurrencyRateDTO> GetCurrencyRate(int currencyId, int? marketId)
         {
             throw new NotImplementedException();
         }

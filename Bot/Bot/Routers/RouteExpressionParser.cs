@@ -12,7 +12,7 @@ namespace Bot.Routers
         private readonly string commandPattern = @"^\/?(?<command>\w+)(?:(?<arguments>[\w\d {}=_]*))$";
         private readonly string argumentPattern = @"^(?<name>--\w+=)?{(?<argument>\w+)}$";
 
-        public string parseExpression(string command)
+        public string ParseExpression(string command)
         {
             var expression = new Regex(commandPattern);
             var resultsOfParsing = expression.Match(command);
@@ -21,7 +21,7 @@ namespace Bot.Routers
 
             var stringBuilder = new StringBuilder();
             //append slash to begining of command
-            stringBuilder.Append('/');
+            stringBuilder.Append('^/');
             //append command name
             stringBuilder.Append(resultsOfParsing.Groups["command"].Value);
             //if command have argumets
@@ -39,7 +39,7 @@ namespace Bot.Routers
                 stringBuilder.Append(joined);
             }
 
-            return stringBuilder.ToString();
+            return stringBuilder.Append('$').ToString();
         }
 
         private string _parseArgument(string argument)
