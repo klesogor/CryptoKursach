@@ -1,14 +1,13 @@
-﻿using Bot.Entities;
-using System;
+﻿using System;
 using System.Collections.Generic;
 using System.Text;
 
-namespace Bot.APIs.DTO
+namespace Bot.Entities
 {
-    public class UserCurrencyUpdateDTO
+    public class CurrencyRate
     {
         public Currency Currency { get; set; }
-        public string Market { get; set; }
         public decimal Rate { get; set; }
+        public DateTime UpdatedAt { get; set; }
     }
 }

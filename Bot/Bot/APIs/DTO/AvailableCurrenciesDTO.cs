@@ -7,6 +7,6 @@ namespace Bot.APIs.DTO
 {
     public class AvailableCurrenciesDTO
     {
-        public IEnumerable<Currency> Currencies { get; set; }
+        public List<Currency> Currencies { get; set; }
     }
 }

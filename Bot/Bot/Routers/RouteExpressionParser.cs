@@ -21,7 +21,7 @@ namespace Bot.Routers
 
             var stringBuilder = new StringBuilder();
             //append slash to begining of command
-            stringBuilder.Append('^/');
+            stringBuilder.Append("^/");
             //append command name
             stringBuilder.Append(resultsOfParsing.Groups["command"].Value);
             //if command have argumets

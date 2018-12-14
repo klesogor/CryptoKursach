@@ -4,6 +4,7 @@ using System.Net.Http;
 using System.Text;
 using System.Threading.Tasks;
 using Bot.APIs.DTO;
+using Bot.Entities;
 using Newtonsoft.Json;
 
 namespace Bot.APIs
@@ -14,19 +15,19 @@ namespace Bot.APIs
         //incapsulate dependencies. No real need for DI, since this is .NET objects
         private readonly HttpClient _http = new HttpClient();
 
-        public Task<SubscriptionDTO> AddSubscription(int userId, int currencyId, int marketId)
+        public Task<bool> AddSubscription(int userId, int currencyId, int marketId)
         {
             throw new NotImplementedException();
         }
 
-        public async Task<AvailableCurrenciesDTO> GetAvailableCurrencies()
+        public async Task<List<Currency>> GetAvailableCurrencies()
         {
             var result = await _http.GetAsync($"{_baseUrl}/subscription");
             var resultString = await result.Content.ReadAsStringAsync();
-            return JsonConvert.DeserializeObject<Response<AvailableCurrenciesDTO>>(resultString).Value;
+            return JsonConvert.DeserializeObject<Response<AvailableCurrenciesDTO>>(resultString).Value.Currencies;
         }
 
-        public Task<CurrencyRateDTO> GetCurrencyRate(int currencyId, int? marketId)
+        public Task<List<CurrencyRate>> GetCurrencyRate(int currencyId, int? marketId)
         {
             throw new NotImplementedException();
         }
