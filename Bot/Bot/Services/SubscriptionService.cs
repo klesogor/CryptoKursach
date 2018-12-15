@@ -33,7 +33,7 @@ namespace Bot.Services
                 task.Wait();
                 var result = task.Result;
 
-                var courses = result.Currencies.Select(x => $"* *{x.Name}*").ToArray();
+                var courses = result.Select(x => $"* *{x.Name}*").ToArray();
                 return new Reply() { Message = $"Available currencies are: \n {string.Join(';',courses)}" };
             }
             catch (Exception ex) {
