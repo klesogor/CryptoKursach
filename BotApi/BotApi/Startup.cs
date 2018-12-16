@@ -2,7 +2,9 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
+using AutoMapper;
 using BotApi.Data;
+using BotApi.Middleware;
 using BotApi.Services;
 using BotApi.Services.Interfaces;
 using Microsoft.AspNetCore.Builder;
@@ -30,6 +32,7 @@ namespace BotApi
         {
             services.AddMvc()
                 .SetCompatibilityVersion(CompatibilityVersion.Version_2_1);
+            services.AddAutoMapper();
 
             DAModule.ConfigureServices(services, Configuration);
             ServicesModule.ConfigureServices(services, Configuration);
@@ -45,6 +48,8 @@ namespace BotApi
             }
 
             initializer.Seed().Wait();
+
+            app.UseBotApiMiddleware(Configuration);
 
             app.UseMvc();
         }

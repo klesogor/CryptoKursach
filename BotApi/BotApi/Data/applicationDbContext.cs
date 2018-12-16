@@ -23,10 +23,10 @@ namespace BotApi.Data
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
             modelBuilder.Entity<Subscription>()
-                .HasIndex(s => new { s.Currency, s.User })
+                .HasIndex(s => new { s.CurrencyId, s.UserId })
                 .IsUnique();
             modelBuilder.Entity<CurrencyMarket>()
-                .HasIndex(cm => new { cm.Currency, cm.Market })
+                .HasIndex(cm => new { cm.CurrencyId, cm.MarketId })
                 .IsUnique();
         }
     }

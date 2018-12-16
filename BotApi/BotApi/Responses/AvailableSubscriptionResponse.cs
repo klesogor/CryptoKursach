@@ -6,7 +6,7 @@ using System.Threading.Tasks;
 
 namespace BotApi.Responses
 {
-    public class AvailableSubscriptionResponse: AbstractResponse
+    public class AvailableSubscriptionResponse
     {
         public IEnumerable<Currency> Currencies { get; set; }
     }

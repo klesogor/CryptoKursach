@@ -1,52 +1,58 @@
 ﻿using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
+using AutoMapper;
 using BotApi.Data;
 using BotApi.Data.Models;
+using BotApi.DTO;
 using BotApi.Responses;
 using BotApi.Services.Interfaces;
 using Microsoft.AspNetCore.Mvc;
 
 namespace BotApi.Controllers
 {
-    [Route("api/[controller]")]
     [ApiController]
     public class SubscriptionController : ControllerBase
     {
-        private readonly ISubscriptionService _service; 
-        public SubscriptionController(ISubscriptionService service)
+        private readonly ISubscriptionService _service;
+        private readonly IMapper _mapper;
+        public SubscriptionController(ISubscriptionService service, IMapper mapper)
         {
             _service = service;
+            _mapper = mapper;
         }
 
-        // GET api/subscription
+        
         [HttpGet]
-        public async Task<ActionResult<JsonResult>> GetAvailable()
+        [Route("/api/v1/currencies")]
+        public async Task<IActionResult> GetAvailableCurrencies()
         {
-            return new JsonResult(new AvailableSubscriptionResponse()
-            {
-                Success = true,
-                Currencies = await _service.GetAvailableCurrencies()
-            });
+            return Ok(_mapper.Map<
+                    IEnumerable<Currency>,
+                    IEnumerable<CurrencyDTO>
+                    >(await _service.GetAvailableCurrencies()
+                )
+                );   
         }
 
-        // GET api/subscription/5
-        [HttpGet("{id}")]
-        public async Task<ActionResult<JsonResult>> Get(int id)
+        [HttpGet()]
+        [Route("/subscriptions/{id}")]
+        public async Task<IActionResult> GetSubscriptions(int id)
         {
-            return new JsonResult(await _service.GetSubscriptionsByUser(id));
+            return Ok(await _service.GetSubscriptionsByUser(id));
         }
 
-        // POST api/subscription
-        [HttpPost]
+        /*[HttpPost]
         public void Post([FromBody] string value)
         {
         }
+
 
         // DELETE api/subscription/5
         [HttpDelete("{id}")]
         public void Delete(int id)
         {
         }
+        */
     }
 }

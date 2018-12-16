@@ -16,6 +16,6 @@ namespace BotApi.Data.Models
         [MaxLength(256)]
         public string ImageUrl { get; set; }
 
-        public List<CurrencyMarket> CurrencyMarkets { get; set; }
+        public virtual List<CurrencyMarket> CurrencyMarkets { get; set; }
     }
 }

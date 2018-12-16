@@ -9,11 +9,11 @@ namespace BotApi.Middleware
 {
     public static class RegisterMiddlewareExtension
     {
-        public static IApplicationBuilder UseMiddleware(this IApplicationBuilder builder, IConfiguration config)
+        public static IApplicationBuilder UseBotApiMiddleware(this IApplicationBuilder builder, IConfiguration config)
         {
             builder.UseMiddleware<JsonApiMiddleware>();
             builder.UseMiddleware<TokenMiddleware>(
-                    config.GetValue("Secrets.BotToken", "No token")
+                   config.GetSection("Secrets:BotToken").Value
                 );
 
             return builder;
