@@ -19,5 +19,15 @@ namespace BotApi.Data
         public DbSet<CurrencyMarket> CurrencyMarkets { get; set; }
 
         public DbSet<CurrencyRate> CurrencyRates { get; set; }
+
+        protected override void OnModelCreating(ModelBuilder modelBuilder)
+        {
+            modelBuilder.Entity<Subscription>()
+                .HasIndex(s => new { s.Currency, s.User })
+                .IsUnique();
+            modelBuilder.Entity<CurrencyMarket>()
+                .HasIndex(cm => new { cm.Currency, cm.Market })
+                .IsUnique();
+        }
     }
 }

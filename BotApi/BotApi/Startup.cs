@@ -30,10 +30,10 @@ namespace BotApi
         {
             services.AddMvc()
                 .SetCompatibilityVersion(CompatibilityVersion.Version_2_1);
-            services.AddDbContext<ApplicationDbContext>(options => options.UseNpgsql(Configuration.GetConnectionString("DefaultConnection")));
 
-            services.AddScoped<ISubscriptionService, SubscriptionService>();
-            services.AddTransient<DataInitializer>();
+            DAModule.ConfigureServices(services, Configuration);
+            ServicesModule.ConfigureServices(services, Configuration);
+
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
