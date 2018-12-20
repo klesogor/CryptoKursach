@@ -9,6 +9,7 @@ namespace BotApi.Services
         public static void ConfigureServices(IServiceCollection services, IConfiguration configuration)
         {
             services.AddScoped(typeof(ISubscriptionService), typeof(SubscriptionService));
+            services.AddScoped(typeof(IUserService), typeof(UserService));
         }
     }
 }

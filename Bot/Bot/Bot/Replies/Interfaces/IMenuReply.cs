@@ -3,12 +3,10 @@ using System.Collections.Generic;
 using System.Text;
 using Telegram.Bot.Types.ReplyMarkups;
 
-namespace Bot.Bot
+namespace Bot.Bot.Replies.Interfaces
 {
-    public interface IReply
+    public interface IMenuReply: ITextReply
     {
-       string Message { get; set; }
-
-       IReplyMarkup  Markup{ get; set; }
+        IReplyMarkup Markup { get; set; }
     }
 }

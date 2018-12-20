@@ -1,4 +1,6 @@
 ﻿using Bot.APIs.DTO;
+using Bot.Bot.Replies;
+using Bot.Bot.Replies.Interfaces;
 using Bot.Exceptions;
 using Bot.Routers;
 using System;
@@ -14,6 +16,7 @@ namespace Bot.Bot
         private readonly string _PKEY;
         private readonly IRouter _router;
         private ITelegramBotClient _bot;
+        private IResponseRenderer _renderer;
 
         public TelegramBot(string PKEY, IRouter router)
         {
@@ -26,24 +29,35 @@ namespace Bot.Bot
             _bot = new TelegramBotClient(_PKEY);
             Console.WriteLine("Starting bot...");
             _bot.OnMessage += _botMessageHandler;
+            _bot.OnCallbackQuery += _botCallbackHandler;
             _bot.StartReceiving();
+            _renderer = new Renderer(_bot);
         }
 
         private async void _botMessageHandler(object sender, MessageEventArgs e)
         {
             try
             {
-                var result = _router.Dispatch(e.Message.Text);
-                await _bot.SendTextMessageAsync(
-                    chatId: e.Message.Chat,
-                    text: result.Message,
-                    replyMarkup: result.Markup,
-                    parseMode: Telegram.Bot.Types.Enums.ParseMode.Markdown
-                    );
+                var result = _router.Dispatch(e.Message.Text, (int)e.Message.Chat.Id);
+                result.Render(_renderer, (int)e.Message.Chat.Id);
   
             }
             catch (DomainException) {
                 await _bot.SendTextMessageAsync(chatId: e.Message.Chat, text: "Unknown command");
+            }
+        }
+
+        private async void _botCallbackHandler(object sender, CallbackQueryEventArgs e)
+        {
+            try
+            {
+                var result = _router.Dispatch(e.CallbackQuery.Data, (int)e.CallbackQuery.Message.Chat.Id);
+                result.Render(_renderer, (int)e.CallbackQuery.Message.Chat.Id);
+
+            }
+            catch (DomainException)
+            {
+                await _bot.SendTextMessageAsync(chatId: e.CallbackQuery.Message.Chat, text: "Unknown command");
             }
         }
     }

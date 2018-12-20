@@ -2,24 +2,25 @@
 using System.Linq;
 using System.Threading.Tasks;
 using AutoMapper;
-using BotApi.Data;
 using BotApi.Data.Models;
 using BotApi.DTO;
-using BotApi.Responses;
+using BotApi.Requests;
 using BotApi.Services.Interfaces;
 using Microsoft.AspNetCore.Mvc;
 
 namespace BotApi.Controllers
 {
     [ApiController]
-    public class SubscriptionController : ControllerBase
+    public class SubscriptionController : TelegramBotController
     {
         private readonly ISubscriptionService _service;
-        private readonly IMapper _mapper;
-        public SubscriptionController(ISubscriptionService service, IMapper mapper)
+        public SubscriptionController(
+            ISubscriptionService service, 
+            IUserService userService, 
+            IMapper mapper
+            ): base(mapper, userService)
         {
             _service = service;
-            _mapper = mapper;
         }
 
         
@@ -27,32 +28,54 @@ namespace BotApi.Controllers
         [Route("/api/v1/currencies")]
         public async Task<IActionResult> GetAvailableCurrencies()
         {
-            return Ok(_mapper.Map<
+            var result = await _service.GetAvailableCurrencies();
+            var mapped = _mapper.Map<
                     IEnumerable<Currency>,
                     IEnumerable<CurrencyDTO>
-                    >(await _service.GetAvailableCurrencies()
-                )
-                );   
+                    >(result);
+            return Ok(mapped);   
         }
 
-        [HttpGet()]
-        [Route("/subscriptions/{id}")]
-        public async Task<IActionResult> GetSubscriptions(int id)
+        [HttpGet]
+        [Route("/api/v1/subscription")]
+        public async Task<IActionResult> GetSubscriptions()
         {
-            return Ok(await _service.GetSubscriptionsByUser(id));
+            return Ok(
+                       (await _service.GetSubscriptionsByUser(this.GetCurrentChatId()))
+                       .Select(s => new SubscriptionDTO()
+                       {
+                           SubscriptionId = s.Id,
+                           Currency = s.Currency.Currency,
+                           Market = s.Currency.Market
+                       }
+                       )  
+                );
         }
 
-        /*[HttpPost]
-        public void Post([FromBody] string value)
+        [HttpGet]
+        [Route("/api/v1/currency/{id}/markets")]
+        public async Task<IActionResult> GetMarkets(int id)
         {
+            return Ok(
+                _mapper.Map<
+                    IEnumerable<Market>,
+                    IEnumerable<MarketDTO>
+                    >(await _service.GetMarketsByCurrency(id))
+                );
         }
 
-
-        // DELETE api/subscription/5
-        [HttpDelete("{id}")]
-        public void Delete(int id)
+        [HttpPost]
+        [Route("/api/v1/subscribe")]
+        public async Task<IActionResult> AddSubscription([FromBody] SubscriptionRequest request)
         {
+            return Ok(await _service.Subscribe(request.CurrencyId, request.MarketId, this.GetCurrentChatId()));
         }
-        */
+
+        [HttpDelete]    
+        [Route("/api/v1/subscription/{id}")]
+        public async Task<IActionResult> RemoveSubscription(int id)
+        {
+            return Ok(await _service.Unsibscribe(id));
+        }
     }
 }

@@ -25,6 +25,8 @@ namespace Bot
         public void _bindRoutes(IRouter router)
         {
             router.Bind("/subscribe", SubscriptionService.GetAvailableCurrencies);
+            router.Bind("/subscribe {currencyId}", SubscriptionService.GetAwailableMarketsByCurrency);
+            router.Bind("/subscribe {currencyId} {marketId}", SubscriptionService.Subscribe);
         }
     }
 }

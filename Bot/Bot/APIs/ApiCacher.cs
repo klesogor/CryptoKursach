@@ -25,9 +25,9 @@ namespace Bot.APIs
             _cache = new MemoryCache(options);
         }
 
-        public Task<bool> AddSubscription(int userId, int currencyId, int marketId)
+        public Task<bool> Subscribe(int userId, int currencyId, int marketId)
         {
-            return _api.AddSubscription(userId, currencyId, marketId);
+            return _api.Subscribe(userId, currencyId, marketId);
         }
 
         public Task<List<Currency>> GetAvailableCurrencies()
@@ -37,6 +37,11 @@ namespace Bot.APIs
                 entry.AbsoluteExpirationRelativeToNow = new TimeSpan(_cacheTTL);
                 return _api.GetAvailableCurrencies();
             });
+        }
+
+        public Task<List<Market>> GetAvailableMarkets(int currencyId)
+        {
+            return _api.GetAvailableMarkets(currencyId);
         }
 
         public Task<List<CurrencyRate>> GetCurrencyRate(int currencyId, int? marketId = null)

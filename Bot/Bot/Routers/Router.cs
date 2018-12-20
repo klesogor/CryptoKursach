@@ -1,4 +1,5 @@
 ﻿using Bot.Bot;
+using Bot.Bot.Replies.Interfaces;
 using Bot.Exceptions;
 using Bot.Services;
 using System;
@@ -20,7 +21,7 @@ namespace Bot.Routers
             _parser = parser;
         }
 
-        public IRouter Bind(string command, Func<ParameterBag,IReply> action, string name = null)
+        public IRouter Bind(string command, Func<ParameterBag,int,IReply> action, string name = null)
         {
   
             _routes.Add(
@@ -34,13 +35,15 @@ namespace Bot.Routers
             return this;
         }
 
-        public IReply Dispatch(string route)
+        public IReply Dispatch(string route, int chatId)
         {
             foreach (var router in _routes)
             {
                 var match = Regex.Match(route, router.CompiledRoute);
                 if (match.Success) {
-                    return router.Handler(_parseParams(match));
+                    var param = _parseParams(match);
+                    param.AddParameter("command", route);
+                    return router.Handler(param, chatId);
                 }
             }
 

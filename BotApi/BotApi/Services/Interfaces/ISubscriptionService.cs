@@ -15,5 +15,9 @@ namespace BotApi.Services.Interfaces
         Task<IEnumerable<Market>> GetMarketsByCurrency(int currencyId);
 
         Task<IEnumerable<Subscription>> GetSubscriptionsByUser(int chatId);
+
+        Task<bool> Unsubscribe(int currencyId, int marketId, int chatId);
+
+        Task<bool> Unsibscribe(int subscriptionId);
     }
 }

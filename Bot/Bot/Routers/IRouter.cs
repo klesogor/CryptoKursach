@@ -1,16 +1,13 @@
-﻿using Bot.Bot;
-using Bot.Services;
+﻿using Bot.Bot.Replies.Interfaces;
 using System;
-using System.Collections.Generic;
-using System.Text;
 
 namespace Bot.Routers
 {
     public interface IRouter
     {
-        IRouter Bind(string route, Func<ParameterBag,IReply> action, string name = null);
+        IRouter Bind(string route, Func<ParameterBag,int,IReply> action, string name = null);
 
-        IReply Dispatch(string route);
+        IReply Dispatch(string route, int ChatId);
 
         Route GetRouteByName(string name);
     }
