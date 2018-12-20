@@ -3,8 +3,9 @@ using Bot.Bot;
 using Bot.Bot.Replies;
 using Bot.Bot.Replies.Interfaces;
 using Bot.Routers;
-using System;
 using System.Collections.Generic;
+using System.Linq;
+using System.Threading.Tasks;
 using Telegram.Bot.Types;
 using Telegram.Bot.Types.ReplyMarkups;
 
@@ -14,31 +15,25 @@ namespace Bot.Services
     {
         public SubscriptionService(IAPI api) : base(api) { }
 
-        public IReply Subscribe(ParameterBag parameters, Chat chat)
+        public async Task<IReply> Subscribe(ParameterBag parameters, Chat chat)
         {
             int currencyId = int.Parse(parameters.GetObjectAsString("currencyId"));
             int marketId = int.Parse(parameters.GetObjectAsString("marketId"));
 
-            var task = _api.Subscribe((int)chat.Id, currencyId, marketId);
-            task.Wait();
-            if (task.Result) { 
-                return new Reply() { Text = "You successfully subscribed for rate updates! You can stop receiving them by unsibscribing" };
-            }
+            await _api.Subscribe((int)chat.Id, currencyId, marketId);
+ 
 
-            return new Reply() { Text = "You already subscribed for currency rate updates!" };
+            return new Reply() { Text = "You successfully subscribed for rate updates! You can stop receiving them by unsibscribing" };
+
         }
 
-        public IReply GetAvailableCurrencies(ParameterBag bag, Chat chat)
+        public async Task<IReply> GetAvailableCurrencies(ParameterBag bag, Chat chat)
         {
-            try
-            {
-                var task = _api.GetAvailableCurrencies();
-                task.Wait();
-                var result = task.Result;
+                var res = await _api.GetAvailableCurrencies();
 
                 var keyboard = new List<InlineKeyboardButton>();
 
-                foreach (var currency in result)
+                foreach (var currency in res)
                 {
                     keyboard.Add(new InlineKeyboardButton() {
                         CallbackData = $"/subscribe {currency.Id}",
@@ -50,21 +45,12 @@ namespace Bot.Services
                     Markup = new InlineKeyboardMarkup(keyboard),
                     Text = "<b>Currenies list:</b>"
                 };
-            }
-            catch (Exception ex) {
-                Console.Write(ex.Message);
-                throw ex;
-            }
         }
 
-        public IReply GetAwailableMarketsByCurrency(ParameterBag bag, Chat chat)
+        public async Task<IReply> GetAwailableMarketsByCurrency(ParameterBag bag, Chat chat)
         {
-            try
-            {
                 int currencyId = int.Parse(bag.GetObjectAsString("currencyId"));
-                var task = _api.GetAvailableMarkets(currencyId);
-                task.Wait();
-                var res = task.Result;
+                var res = await _api.GetAvailableMarkets(currencyId);
 
                 var keyboard = new List<InlineKeyboardButton>();
 
@@ -82,11 +68,62 @@ namespace Bot.Services
                     Markup = new InlineKeyboardMarkup(keyboard),
                     Text = "<b>Markets list:</b>"
                 };
+        }
+
+        public async Task<IReply> GetSubscriptions(ParameterBag bag, Chat chat)
+        {
+            var res = await _api.GetSubscriptions((int)chat.Id);
+
+            var text = "This is your subscriptions. You can use keyboard below to check rate of any currency.\n" +
+                "<b>Your current subscriptions are:</b>\n";
+            text += string.Join('\n',res.Select(s => $" - <b>{s.Currency.Symbol}</b>@<b>{s.Currency.Name}</b>"));
+            var keyboard = new List<InlineKeyboardButton>();
+
+            foreach (var subscription in res)
+            {
+                keyboard.Add(new InlineKeyboardButton()
+                {
+                    CallbackData = $"/rate {subscription.Currency.Id} {subscription.Market.Id}",
+                    Text = $"{subscription.Currency.Symbol}@{subscription.Market.Name}"
+                });
             }
-            catch (Exception ex) { 
-                Console.Write(ex.Message);
-                throw ex;
+
+            return new MenuReply()
+            {
+                Markup = new InlineKeyboardMarkup(keyboard),
+                Text = text
+            };
+        }
+
+        public async Task<IReply> GetSubscriptionsForUnsubscribe(ParameterBag bag, Chat chat)
+        {
+            var res = await _api.GetSubscriptions((int)chat.Id);
+
+            var text = "This is your subscriptions. You can use keyboard below to unsubscribe.\n" +
+                "<b>Your current subscriptions are:</b>\n";
+            text += string.Join('\n', res.Select(s => $" - <b>{s.Currency.Symbol}</b>@<b>{s.Currency.Name}</b>"));
+            var keyboard = new List<InlineKeyboardButton>();
+
+            foreach (var subscription in res)
+            {
+                keyboard.Add(new InlineKeyboardButton()
+                {
+                    CallbackData = $"/unsubscribe {subscription.Id}",
+                    Text = $"{subscription.Currency.Symbol}@{subscription.Market.Name}"
+                });
             }
+
+            return new MenuReply()
+            {
+                Markup = new InlineKeyboardMarkup(keyboard),
+                Text = text
+            };
+        }
+
+        public async Task<IReply> Unsubscribe(ParameterBag bag, Chat chat)
+        {
+            await _api.Unsubscribe((int)chat.Id, int.Parse(bag.GetObjectAsString("currencyId")));
+            return new Reply() { Text = "Unsubscribed successfully. Now you will not recive notifications" };
         }
     }
 }

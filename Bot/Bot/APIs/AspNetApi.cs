@@ -2,7 +2,9 @@
 using System.Collections.Generic;
 using System.Net.Http;
 using System.Threading.Tasks;
+using Bot.APIs.DTO;
 using Bot.Entities;
+using Bot.Exceptions;
 using Newtonsoft.Json;
 
 namespace Bot.APIs
@@ -23,6 +25,11 @@ namespace Bot.APIs
         {
             var result = await _http.GetAsync("currencies");
             var resultString = await result.Content.ReadAsStringAsync();
+            if (!result.IsSuccessStatusCode)
+            {
+                throw new ApiException(resultString);
+            }
+
             return JsonConvert.DeserializeObject<List<Currency>>(resultString);
         }
 
@@ -30,6 +37,11 @@ namespace Bot.APIs
         {
             var result = await _http.GetAsync($"currency/{currencyId}/markets");
             var resultString = await result.Content.ReadAsStringAsync();
+            if (!result.IsSuccessStatusCode)
+            {
+                throw new ApiException(resultString);
+            }
+
             return JsonConvert.DeserializeObject<List<Market>>(resultString);
         }
 
@@ -38,7 +50,28 @@ namespace Bot.APIs
             throw new NotImplementedException();
         }
 
-        public async Task<bool> Start(int userId, string userName)
+        public async Task<List<Subscription>> GetSubscriptions(int chatId)
+        {
+            var httpRequestMessage = new HttpRequestMessage
+            {
+                Method = HttpMethod.Get,
+                RequestUri = new Uri("http://localhost:64132/api/v1/subscription"),
+                Headers = {
+                { "X-CHAT-ID", chatId.ToString() }
+            },
+            };
+
+            var result = await _http.SendAsync(httpRequestMessage);
+            var resultString = await result.Content.ReadAsStringAsync();
+            if (!result.IsSuccessStatusCode)
+            {
+                throw new ApiException(resultString);
+            }
+
+            return JsonConvert.DeserializeObject<List<Subscription>>(resultString);
+        }
+
+        public async Task Start(int userId, string userName)
         {
             var data = new FormUrlEncodedContent(new Dictionary<string, string> {
                 { "ChatId", userId.ToString() },
@@ -46,10 +79,13 @@ namespace Bot.APIs
             });
 
             var result = await _http.PostAsync("start", data);
-            return result.StatusCode == System.Net.HttpStatusCode.OK;
+            if (!result.IsSuccessStatusCode)
+            {
+                throw new ApiException(await result.Content.ReadAsStringAsync());
+            }
         }
 
-        public async Task<bool> Subscribe(int userId, int currencyId, int marketId)
+        public async Task Subscribe(int userId, int currencyId, int marketId)
         {
             var data = new FormUrlEncodedContent(new Dictionary<string, string> {
                 { "CurrencyId", currencyId.ToString() },
@@ -58,8 +94,29 @@ namespace Bot.APIs
             data.Headers.Add("X-CHAT-ID", new[] { userId.ToString() });
 
             var result = await _http.PostAsync("subscribe", data);
-            var resdata = await result.Content.ReadAsStringAsync();
-            return result.StatusCode == System.Net.HttpStatusCode.OK;
+            if (!result.IsSuccessStatusCode)
+            {
+                throw new ApiException(await result.Content.ReadAsStringAsync());
+            }
+        }
+
+        public async Task Unsubscribe(int userId, int currencyId)
+        {
+            var httpRequestMessage = new HttpRequestMessage
+            {
+                Method = HttpMethod.Delete,
+                RequestUri = new Uri($"http://localhost:64132/api/v1/subscription/{currencyId}"),
+                Headers = {
+                { "X-CHAT-ID",userId.ToString() }
+            },
+            };
+
+            var result = await _http.SendAsync(httpRequestMessage);
+            var resultString = await result.Content.ReadAsStringAsync();
+            if (!result.IsSuccessStatusCode)
+            {
+                throw new ApiException(resultString);
+            }
         }
     }
 }

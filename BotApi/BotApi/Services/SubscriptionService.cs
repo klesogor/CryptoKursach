@@ -1,6 +1,8 @@
 ﻿using BotApi.Data.DAL;
 using BotApi.Data.Models;
+using BotApi.Exceptions;
 using BotApi.Services.Interfaces;
+using Microsoft.EntityFrameworkCore;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
@@ -18,18 +20,29 @@ namespace BotApi.Services
 
         public async Task<bool> Subscribe(int currencyId, int marketId, int chatId)
         {
-            var subscriptionRepo = UOW.GetRepository<Subscription>();
-            var subscription = new Subscription()
+            try
             {
-                CurrencyId = GetCurrencyMarket(marketId, currencyId).Id,
-                UserId = GetUserByChatId(chatId).Id
-            };
+                var subscriptionRepo = UOW.GetRepository<Subscription>();
+                var cid = (await GetCurrencyMarket(marketId, currencyId)).Id;
+                var uid = await GetUserByChatId(chatId);
+                if(uid is null) {
+                    throw new UnregisteredUserException();
+                }
+                var subscription = new Subscription()
+                {
+                    CurrencyId = cid,
+                    UserId = uid.Id
+                };
 
-            var res = await subscriptionRepo.CreateAsync(subscription);
+                var res = await subscriptionRepo.CreateAsync(subscription);
 
-            await UOW.SaveAsync();
+                await UOW.SaveAsync();
 
-            return true;
+                return true;
+            }
+            catch (DbUpdateException) {
+                throw new DuplicatedException("You have already subscribed on this currency updates!");
+            }
         }
 
         public async Task<IEnumerable<Currency>> GetAvailableCurrencies()

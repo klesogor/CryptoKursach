@@ -18,14 +18,8 @@ namespace BotApi.Controllers
         [Route("/api/v1/start")]
         public async Task<IActionResult> Register([FromForm]RegisterRequest request)
         {
-            try
-            {
                 await _userService.RegisterUser(request.ChatId, request.Name);
                 return Ok();
-            }
-            catch(Exception) { 
-                return Ok();
-            }
         }
     }
 }

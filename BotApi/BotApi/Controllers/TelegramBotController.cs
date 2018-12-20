@@ -1,5 +1,6 @@
 ﻿using AutoMapper;
 using BotApi.Data.Models;
+using BotApi.Exceptions;
 using BotApi.Services.Interfaces;
 using Microsoft.AspNetCore.Mvc;
 using System.Threading.Tasks;
@@ -21,7 +22,9 @@ namespace BotApi.Controllers
 
         protected virtual async Task<User> GetCurrentUser()
         {
-            return await _userService.GetUserByChatId(int.Parse(Request.Headers[ChatIdToken]));
+            var user = await _userService.GetUserByChatId(int.Parse(Request.Headers[ChatIdToken]));
+            if (user is null) throw new UnregisteredUserException();
+            return user;
         }
 
         protected virtual int GetCurrentChatId()

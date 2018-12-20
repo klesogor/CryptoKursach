@@ -42,14 +42,12 @@ namespace BotApi.Controllers
         public async Task<IActionResult> GetSubscriptions()
         {
             return Ok(
-                       (await _service.GetSubscriptionsByUser(this.GetCurrentChatId()))
-                       .Select(s => new SubscriptionDTO()
-                       {
-                           SubscriptionId = s.Id,
-                           Currency = s.Currency.Currency,
-                           Market = s.Currency.Market
-                       }
-                       )  
+                      (await _service.GetSubscriptionsByUser(this.GetCurrentChatId()))
+                        .Select(s => new SubscriptionDTO() {
+                            Id = s.Id,
+                            Currency = _mapper.Map<Currency,CurrencyDTO>(s.Currency.Currency),
+                            Market = _mapper.Map<Market,MarketDTO>(s.Currency.Market)
+                        })
                 );
         }
 

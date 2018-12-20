@@ -30,6 +30,9 @@ namespace Bot
             router.Bind("/subscribe {currencyId}", SubscriptionService.GetAwailableMarketsByCurrency);
             router.Bind("/subscribe {currencyId} {marketId}", SubscriptionService.Subscribe);
             router.Bind("/start", StartService.Start);
+            router.Bind("/subscriptions", SubscriptionService.GetSubscriptions);
+            router.Bind("/unsubscribe", SubscriptionService.GetSubscriptionsForUnsubscribe);
+            router.Bind("/unsubscribe {currencyId}", SubscriptionService.Unsubscribe);
         }
     }
 }

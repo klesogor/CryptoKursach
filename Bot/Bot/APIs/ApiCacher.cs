@@ -25,7 +25,7 @@ namespace Bot.APIs
             _cache = new MemoryCache(options);
         }
 
-        public Task<bool> Subscribe(int userId, int currencyId, int marketId)
+        public Task Subscribe(int userId, int currencyId, int marketId)
         {
             return _api.Subscribe(userId, currencyId, marketId);
         }
@@ -53,9 +53,19 @@ namespace Bot.APIs
             });
         }
 
-        public Task<bool> Start(int userId, string userName)
+        public  Task Start(int userId, string userName)
         {
-            throw new NotImplementedException();
+            return _api.Start(userId,userName);
+        }
+
+        public Task<List<Subscription>> GetSubscriptions(int chatId)
+        {
+            return _api.GetSubscriptions(chatId);
+        }
+
+        public Task Unsubscribe(int userId, int currencyId)
+        {
+            return _api.Unsubscribe(userId, currencyId);
         }
     }
 }

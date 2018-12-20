@@ -9,10 +9,12 @@ namespace Bot.APIs
 {
     public interface IAPI
     {
-        Task<bool> Subscribe(int userId, int currencyId, int marketId);
+        Task Subscribe(int userId, int currencyId, int marketId);
+        Task Unsubscribe(int userId, int currencyId);
         Task<List<Currency>> GetAvailableCurrencies();
         Task<List<Market>> GetAvailableMarkets(int currencyId);
         Task<List<CurrencyRate>> GetCurrencyRate(int currencyId, int? marketId = null);
-        Task<bool> Start(int userId, string userName);
+        Task Start(int userId, string userName);
+        Task<List<Subscription>> GetSubscriptions(int chatId);
     }
 }

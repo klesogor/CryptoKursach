@@ -1,6 +1,8 @@
 ﻿using BotApi.Data.DAL;
 using BotApi.Data.Models;
+using BotApi.Exceptions;
 using BotApi.Services.Interfaces;
+using Microsoft.EntityFrameworkCore;
 using System.Linq;
 using System.Threading.Tasks;
 
@@ -22,12 +24,18 @@ namespace BotApi.Services
 
         public async Task<User> RegisterUser(int chatId, string Name)
         {
-            var user = new User() { ChatId = chatId, Username = Name };
-            var created = await _uow.GetRepository<User>().CreateAsync(user);
+            try
+            {
+                var user = new User() { ChatId = chatId, Username = Name };
+                var created = await _uow.GetRepository<User>().CreateAsync(user);
 
-            await _uow.SaveAsync();
+                await _uow.SaveAsync();
 
-            return created;
+                return created;
+            }
+            catch (DbUpdateException) {
+                throw new DuplicatedException("You are already registered!");
+            }
         }
     }
 }

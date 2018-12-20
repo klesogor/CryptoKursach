@@ -4,10 +4,10 @@ namespace BotApi.DTO
 {
     public class SubscriptionDTO
     {
-        public Currency Currency {get;set;}
+        public CurrencyDTO Currency { get;set; }
 
-        public Market Market { get; set; }
+        public MarketDTO Market { get; set; }
 
-        public int SubscriptionId { get; set; }
+        public int Id { get; set; }
     }
 }

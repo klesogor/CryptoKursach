@@ -31,14 +31,14 @@ namespace BotApi.Middleware
                 httpContext.Response.Clear();
                 httpContext.Response.StatusCode = ex.Status;
                 httpContext.Response.ContentType = _contentType;
-                await httpContext.Response.WriteAsync(JsonConvert.SerializeObject(new { message = ex.Message }));
+                await httpContext.Response.WriteAsync(JsonConvert.SerializeObject(new { ex.Message }));
             }
             catch (Exception ex)
             {
                 httpContext.Response.Clear();
                 httpContext.Response.StatusCode = 500;
                 httpContext.Response.ContentType = _contentType;
-                await httpContext.Response.WriteAsync(JsonConvert.SerializeObject(new { message = ex.Message }));
+                await httpContext.Response.WriteAsync(JsonConvert.SerializeObject(new { ex.Message }));
             }
         }
     }

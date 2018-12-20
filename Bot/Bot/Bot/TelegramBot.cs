@@ -3,9 +3,8 @@ using Bot.Bot.Replies;
 using Bot.Bot.Replies.Interfaces;
 using Bot.Exceptions;
 using Bot.Routers;
+using Newtonsoft.Json;
 using System;
-using System.Collections.Generic;
-using System.Text;
 using Telegram.Bot;
 using Telegram.Bot.Args;
 
@@ -38,12 +37,17 @@ namespace Bot.Bot
         {
             try
             {
-                var result = _router.Dispatch(e.Message.Text, e.Message.Chat);
+                var result = await _router.Dispatch(e.Message.Text, e.Message.Chat);
                 result.Render(_renderer, (int)e.Message.Chat.Id);
-  
+
             }
             catch (DomainException) {
-                await _bot.SendTextMessageAsync(chatId: e.Message.Chat, text: "Unknown command");
+                new Reply() { Text = "Unknown or incorrect command" }
+                    .Render(_renderer,(int)e.Message.Chat.Id); 
+            }
+            catch (ApiException ex) {
+                new Reply() { Text = JsonConvert.DeserializeObject<ErrorDto>(ex.RawData).Message }
+                .Render(_renderer, (int)e.Message.Chat.Id);
             }
         }
 
@@ -51,13 +55,19 @@ namespace Bot.Bot
         {
             try
             {
-                var result = _router.Dispatch(e.CallbackQuery.Data, e.CallbackQuery.Message.Chat);
+                var result = await _router.Dispatch(e.CallbackQuery.Data, e.CallbackQuery.Message.Chat);
                 result.Render(_renderer, (int)e.CallbackQuery.Message.Chat.Id);
 
             }
             catch (DomainException)
             {
-                await _bot.SendTextMessageAsync(chatId: e.CallbackQuery.Message.Chat, text: "Unknown command");
+                new Reply() { Text = "Unknown or incorrect command" }
+                    .Render(_renderer, (int)e.CallbackQuery.Message.Chat.Id);
+            }
+            catch (ApiException ex)
+            {
+                new Reply() { Text = JsonConvert.DeserializeObject<ErrorDto>(ex.RawData).Message }
+                .Render(_renderer, (int)e.CallbackQuery.Message.Chat.Id);
             }
         }
     }
