@@ -28,6 +28,9 @@ namespace BotApi.Data
             modelBuilder.Entity<CurrencyMarket>()
                 .HasIndex(cm => new { cm.CurrencyId, cm.MarketId })
                 .IsUnique();
+            modelBuilder.Entity<User>()
+                .HasIndex(u => u.ChatId)
+                .IsUnique();
         }
     }
 }

@@ -4,6 +4,7 @@ using System.Text.RegularExpressions;
 using System.Linq;
 using Bot.Bot;
 using Bot.Bot.Replies.Interfaces;
+using Telegram.Bot.Types;
 
 namespace Bot.Routers
 {
@@ -15,7 +16,7 @@ namespace Bot.Routers
 
         public string CompiledRoute { get; set; }
 
-        public Func<ParameterBag, int, IReply> Handler { get; set; }
+        public Func<ParameterBag, Chat, IReply> Handler { get; set; }
 
         public string SetParam(string param, object value)
         {

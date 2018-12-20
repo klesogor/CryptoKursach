@@ -38,7 +38,7 @@ namespace Bot.Bot
         {
             try
             {
-                var result = _router.Dispatch(e.Message.Text, (int)e.Message.Chat.Id);
+                var result = _router.Dispatch(e.Message.Text, e.Message.Chat);
                 result.Render(_renderer, (int)e.Message.Chat.Id);
   
             }
@@ -51,7 +51,7 @@ namespace Bot.Bot
         {
             try
             {
-                var result = _router.Dispatch(e.CallbackQuery.Data, (int)e.CallbackQuery.Message.Chat.Id);
+                var result = _router.Dispatch(e.CallbackQuery.Data, e.CallbackQuery.Message.Chat);
                 result.Render(_renderer, (int)e.CallbackQuery.Message.Chat.Id);
 
             }

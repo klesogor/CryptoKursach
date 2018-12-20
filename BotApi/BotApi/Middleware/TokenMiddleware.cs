@@ -20,12 +20,12 @@ namespace BotApi.Middleware
 
         public async Task InvokeAsync(HttpContext context)
         {
-           /* var token = context.Request?.Headers["X-AUTH-TOKEN"].FirstOrDefault();
+            var token = context.Request?.Headers["X-AUTH-TOKEN"].FirstOrDefault();
             if (_token != token)
             {
                 throw new InvalidTokenException();
             }
-            */
+            
             await next(context);
         }
     }

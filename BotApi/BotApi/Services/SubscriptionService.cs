@@ -19,14 +19,13 @@ namespace BotApi.Services
         public async Task<bool> Subscribe(int currencyId, int marketId, int chatId)
         {
             var subscriptionRepo = UOW.GetRepository<Subscription>();
-            
+            var subscription = new Subscription()
+            {
+                CurrencyId = GetCurrencyMarket(marketId, currencyId).Id,
+                UserId = GetUserByChatId(chatId).Id
+            };
 
-            var res = await subscriptionRepo.CreateAsync(new Subscription()
-                {
-                    Currency = await GetCurrencyMarket(marketId,currencyId),
-                    User = await GetUserByChatId(chatId)
-                }
-            );
+            var res = await subscriptionRepo.CreateAsync(subscription);
 
             await UOW.SaveAsync();
 

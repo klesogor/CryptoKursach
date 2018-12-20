@@ -36,7 +36,8 @@ namespace BotApi.Data
             await context.SaveChangesAsync();
 
             var marketCurrencies = new CurrencyMarket[] {
-                new CurrencyMarket(){ Currency = currencies[0], Market = markets[0], MarketCurrencyId = 1 }
+                new CurrencyMarket(){ Currency = currencies[0], Market = markets[0], MarketCurrencyId = 1 },
+                new CurrencyMarket(){ Currency = currencies[0], Market = markets[0], MarketCurrencyId = 2 }
             };
 
             context.CurrencyMarkets.AddRange(marketCurrencies);

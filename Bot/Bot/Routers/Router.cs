@@ -7,6 +7,7 @@ using System.Collections.Generic;
 using System.Reflection;
 using System.Text;
 using System.Text.RegularExpressions;
+using Telegram.Bot.Types;
 
 namespace Bot.Routers
 {
@@ -21,7 +22,7 @@ namespace Bot.Routers
             _parser = parser;
         }
 
-        public IRouter Bind(string command, Func<ParameterBag,int,IReply> action, string name = null)
+        public IRouter Bind(string command, Func<ParameterBag,Chat,IReply> action, string name = null)
         {
   
             _routes.Add(
@@ -35,7 +36,7 @@ namespace Bot.Routers
             return this;
         }
 
-        public IReply Dispatch(string route, int chatId)
+        public IReply Dispatch(string route, Chat chat)
         {
             foreach (var router in _routes)
             {
@@ -43,7 +44,7 @@ namespace Bot.Routers
                 if (match.Success) {
                     var param = _parseParams(match);
                     param.AddParameter("command", route);
-                    return router.Handler(param, chatId);
+                    return router.Handler(param, chat);
                 }
             }
 

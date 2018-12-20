@@ -1,4 +1,5 @@
 ﻿using System.Collections.Generic;
+using System.IO;
 using System.Linq;
 using System.Threading.Tasks;
 using AutoMapper;
@@ -66,7 +67,7 @@ namespace BotApi.Controllers
 
         [HttpPost]
         [Route("/api/v1/subscribe")]
-        public async Task<IActionResult> AddSubscription([FromBody] SubscriptionRequest request)
+        public async Task<IActionResult> AddSubscription([FromForm]SubscriptionRequest request)
         {
             return Ok(await _service.Subscribe(request.CurrencyId, request.MarketId, this.GetCurrentChatId()));
         }

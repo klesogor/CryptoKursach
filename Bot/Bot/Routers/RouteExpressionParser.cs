@@ -51,7 +51,7 @@ namespace Bot.Routers
             //append command name
             if (result.Groups["name"] != null) stringBuilder.Append(result.Groups["name"].Value);
             //append command regex
-            stringBuilder.Append($@"(?<{result.Groups["argument"].Value}>.+)");
+            stringBuilder.Append($@"(?<{result.Groups["argument"].Value}>[^ ]+)");
 
             return stringBuilder.ToString();
         }

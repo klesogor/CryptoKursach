@@ -13,5 +13,6 @@ namespace Bot.APIs
         Task<List<Currency>> GetAvailableCurrencies();
         Task<List<Market>> GetAvailableMarkets(int currencyId);
         Task<List<CurrencyRate>> GetCurrencyRate(int currencyId, int? marketId = null);
+        Task<bool> Start(int userId, string userName);
     }
 }

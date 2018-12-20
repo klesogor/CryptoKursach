@@ -1,13 +1,11 @@
 ﻿using Bot.APIs;
-using Bot.APIs.DTO;
 using Bot.Bot;
 using Bot.Bot.Replies;
 using Bot.Bot.Replies.Interfaces;
 using Bot.Routers;
 using System;
 using System.Collections.Generic;
-using System.Linq;
-using System.Text;
+using Telegram.Bot.Types;
 using Telegram.Bot.Types.ReplyMarkups;
 
 namespace Bot.Services
@@ -16,18 +14,21 @@ namespace Bot.Services
     {
         public SubscriptionService(IAPI api) : base(api) { }
 
-        public IReply Subscribe(ParameterBag parameters, int chatId)
+        public IReply Subscribe(ParameterBag parameters, Chat chat)
         {
             int currencyId = int.Parse(parameters.GetObjectAsString("currencyId"));
             int marketId = int.Parse(parameters.GetObjectAsString("marketId"));
 
-            var task = _api.Subscribe(chatId, currencyId, marketId);
+            var task = _api.Subscribe((int)chat.Id, currencyId, marketId);
             task.Wait();
+            if (task.Result) { 
+                return new Reply() { Text = "You successfully subscribed for rate updates! You can stop receiving them by unsibscribing" };
+            }
 
-            return new Reply() { Text = "You successfully subscribed to rate updates! You cat stop receiiving them by unsibscribing" };
+            return new Reply() { Text = "You already subscribed for currency rate updates!" };
         }
 
-        public IReply GetAvailableCurrencies(ParameterBag bag, int chatId)
+        public IReply GetAvailableCurrencies(ParameterBag bag, Chat chat)
         {
             try
             {
@@ -56,7 +57,7 @@ namespace Bot.Services
             }
         }
 
-        public IReply GetAwailableMarketsByCurrency(ParameterBag bag, int chatId)
+        public IReply GetAwailableMarketsByCurrency(ParameterBag bag, Chat chat)
         {
             try
             {

@@ -1,4 +1,5 @@
-﻿using System.Threading.Tasks;
+﻿using System;
+using System.Threading.Tasks;
 using BotApi.Exceptions;
 using Microsoft.AspNetCore.Http;
 using Newtonsoft.Json;
@@ -25,9 +26,17 @@ namespace BotApi.Middleware
                 httpContext.Response.StatusCode = _defaultStatus;
                 await _next(httpContext);
             }
-            catch (HttpException ex) {
+            catch (HttpException ex)
+            {
                 httpContext.Response.Clear();
                 httpContext.Response.StatusCode = ex.Status;
+                httpContext.Response.ContentType = _contentType;
+                await httpContext.Response.WriteAsync(JsonConvert.SerializeObject(new { message = ex.Message }));
+            }
+            catch (Exception ex)
+            {
+                httpContext.Response.Clear();
+                httpContext.Response.StatusCode = 500;
                 httpContext.Response.ContentType = _contentType;
                 await httpContext.Response.WriteAsync(JsonConvert.SerializeObject(new { message = ex.Message }));
             }

@@ -52,5 +52,10 @@ namespace Bot.APIs
                 return _api.GetCurrencyRate(currencyId, marketId);
             });
         }
+
+        public Task<bool> Start(int userId, string userName)
+        {
+            throw new NotImplementedException();
+        }
     }
 }

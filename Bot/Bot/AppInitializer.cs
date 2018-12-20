@@ -12,21 +12,24 @@ namespace Bot
     {
         protected RateService RateService { get; set; }
         protected SubscriptionService SubscriptionService { get; set; }
+        protected StartService StartService { get; set; }
         public IRouter Init()
         {
             var API = new AspNetApi();
             SubscriptionService =  new SubscriptionService(API);
+            StartService = new StartService(API);
 
             var router = new Router(new RouteExpressionParser());
             _bindRoutes(router);
             return router;
         }
 
-        public void _bindRoutes(IRouter router)
+        protected virtual void _bindRoutes(IRouter router)
         {
             router.Bind("/subscribe", SubscriptionService.GetAvailableCurrencies);
             router.Bind("/subscribe {currencyId}", SubscriptionService.GetAwailableMarketsByCurrency);
             router.Bind("/subscribe {currencyId} {marketId}", SubscriptionService.Subscribe);
+            router.Bind("/start", StartService.Start);
         }
     }
 }

@@ -19,5 +19,15 @@ namespace BotApi.Services
         {
             return (await _uow.GetRepository<User>().GetAllAsync(u => u.ChatId == chatId)).First();
         }
+
+        public async Task<User> RegisterUser(int chatId, string Name)
+        {
+            var user = new User() { ChatId = chatId, Username = Name };
+            var created = await _uow.GetRepository<User>().CreateAsync(user);
+
+            await _uow.SaveAsync();
+
+            return created;
+        }
     }
 }

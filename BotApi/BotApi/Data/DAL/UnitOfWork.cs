@@ -34,7 +34,7 @@ namespace BotApi.Data.DAL
 
         public Task<int> SaveAsync()
         {
-            throw new NotImplementedException();
+            return context.SaveChangesAsync();
         }
     }
 }

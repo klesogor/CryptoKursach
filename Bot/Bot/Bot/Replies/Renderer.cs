@@ -28,9 +28,13 @@ namespace Bot.Bot.Replies
                 );
         }
 
-        public void RenderPlainText(ITextReply reply, int chatId)
+        public async void RenderPlainText(ITextReply reply, int chatId)
         {
-            throw new NotImplementedException();
+            await _bot.SendTextMessageAsync(
+               chatId: new ChatId(chatId),
+               text: reply.Text,
+               parseMode: Telegram.Bot.Types.Enums.ParseMode.Html
+               );
         }
     }
 }
