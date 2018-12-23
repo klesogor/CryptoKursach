@@ -118,5 +118,17 @@ namespace Bot.APIs
                 throw new ApiException(resultString);
             }
         }
+
+        public async Task<List<RateUpdate>> AggregateUpdates()
+        {
+            var result = await _http.GetAsync("/aggregate");
+            var resultString = await result.Content.ReadAsStringAsync();
+            if (!result.IsSuccessStatusCode)
+            {
+                throw new ApiException(resultString);
+            }
+
+            return JsonConvert.DeserializeObject<List<RateUpdate>>(resultString);
+        }
     }
 }

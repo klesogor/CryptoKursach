@@ -16,5 +16,6 @@ namespace Bot.APIs
         Task<List<CurrencyRate>> GetCurrencyRate(int currencyId, int? marketId = null);
         Task Start(int userId, string userName);
         Task<List<Subscription>> GetSubscriptions(int chatId);
+        Task<List<RateUpdate>> AggregateUpdates();
     }
 }

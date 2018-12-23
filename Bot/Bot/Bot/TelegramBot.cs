@@ -70,5 +70,10 @@ namespace Bot.Bot
                 .Render(_renderer, (int)e.CallbackQuery.Message.Chat.Id);
             }
         }
+
+        public void SendMessage(int chatId, IReply reply)
+        {
+            reply.Render(_renderer, chatId);
+        }
     }
 }

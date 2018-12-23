@@ -1,5 +1,7 @@
-﻿using System.ComponentModel.DataAnnotations;
+﻿using System.Collections.Generic;
+using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
+using BotApi.Aggregators;
 
 namespace BotApi.Data.Models
 {
@@ -9,7 +11,8 @@ namespace BotApi.Data.Models
         [MaxLength(256)]
         public string Name { get; set; }
 
-        [MaxLength(256)]
-        public string ApiEndpoint { get; set; }
+        public AggregationDriverType AggregationDriver { get; set; }
+
+        public virtual List<CurrencyMarket> Currencies { get; set; }
     }
 }

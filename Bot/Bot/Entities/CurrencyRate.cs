@@ -1,6 +1,4 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.Text;
 
 namespace Bot.Entities
 {
@@ -9,5 +7,6 @@ namespace Bot.Entities
         public Currency Currency { get; set; }
         public decimal Rate { get; set; }
         public DateTime UpdatedAt { get; set; }
+        public Market Market { get; set; }
     }
 }

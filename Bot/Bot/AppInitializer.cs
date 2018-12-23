@@ -13,6 +13,7 @@ namespace Bot
         protected RateService RateService { get; set; }
         protected SubscriptionService SubscriptionService { get; set; }
         protected StartService StartService { get; set; }
+
         public IRouter Init()
         {
             var API = new AspNetApi();

@@ -9,7 +9,7 @@ using System.Text;
 
 namespace Bot.Services
 {
-    public class RateService: ApiService
+    public class RateService: AbstractRateService
     {
         public RateService(IAPI api) : base(api) { }
 

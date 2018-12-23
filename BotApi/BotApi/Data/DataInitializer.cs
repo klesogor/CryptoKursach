@@ -29,7 +29,10 @@ namespace BotApi.Data
             await context.SaveChangesAsync();
 
             var markets = new Market[] {
-                new Market() { Name = "Coinmarketcap", ApiEndpoint = "mock endpoint" }
+                new Market() {
+                    Name = "Coin Market Cap",
+                    AggregationDriver = Aggregators.AggregationDriverType.CoinMarketCapDriver
+                }
             };
 
             context.Markets.AddRange(markets);
@@ -37,7 +40,7 @@ namespace BotApi.Data
 
             var marketCurrencies = new CurrencyMarket[] {
                 new CurrencyMarket(){ Currency = currencies[0], Market = markets[0], MarketCurrencyId = 1 },
-                new CurrencyMarket(){ Currency = currencies[1], Market = markets[0], MarketCurrencyId = 2 }
+                new CurrencyMarket(){ Currency = currencies[1], Market = markets[0], MarketCurrencyId = 1027 }
             };
 
             context.CurrencyMarkets.AddRange(marketCurrencies);

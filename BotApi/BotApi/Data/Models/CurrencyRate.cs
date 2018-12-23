@@ -12,7 +12,5 @@ namespace BotApi.Data.Models
         public decimal Rate { get; set; }
 
         public DateTime Date { get; set; }
-
-        public int Batch { get; set; }
     }
 }
