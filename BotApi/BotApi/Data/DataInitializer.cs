@@ -18,7 +18,7 @@ namespace BotApi.Data
         public async Task Seed()
         {
             //if schema already exists - no seeds
-            if(!context.Database.EnsureCreated()) return;
+            if (!context.Database.EnsureCreated()) return;
 
             var currencies = new Currency[] {
                     new Currency() { Name = "Bitcoin", Symbol = "Btc" },
@@ -44,6 +44,14 @@ namespace BotApi.Data
             };
 
             context.CurrencyMarkets.AddRange(marketCurrencies);
+            await context.SaveChangesAsync();
+
+            var currencyRates = new CurrencyRate[] {
+                new CurrencyRate(){ Currency = marketCurrencies[0], Date = DateTime.Now, Rate = 1.0M },
+                new CurrencyRate(){ Currency = marketCurrencies[1], Date = DateTime.Now, Rate = 1.0M }
+            };
+
+            context.CurrencyRates.AddRange(currencyRates);
             await context.SaveChangesAsync();
         }
     }

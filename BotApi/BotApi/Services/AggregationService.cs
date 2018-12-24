@@ -24,24 +24,38 @@ namespace BotApi.Services
             _mapper = mapper;
         }
 
-        public async Task<List<RateUpdateDTO>> Aggregate()
+        public async Task<IEnumerable<RateUpdateDTO>> Aggregate()
         {
             var markets = await _uow.GetRepository<Market>().GetAllAsync();
-            foreach (var market in markets) AggregateMarket(market);
+            foreach (var market in markets) await AggregateMarket(market);
 
-            //form responses
-            var subscriptions = await _uow.GetRepository<Subscription>().GetAllAsync();
-            
+            /** 
+             * Form responses
+             * TODO: REWRITE THIS OMG
+            **/
+            var users = await _uow.GetRepository<User>().GetAllAsync();
+            return users.Select(u => new RateUpdateDTO() {
+                UserId = u.ChatId,
+                Rates = u.Subscriptions.Select(s => new CurrencyRateDTO() {
+                    Currency = _mapper.Map<Currency, CurrencyDTO>(s.Currency.Currency),
+                    Market = _mapper.Map<Market, MarketDTO>(s.Currency.Market),
+                    Rate = s.Currency.Rates.Last().Rate,
+                    UpdatedAt = s.Currency.Rates.Last().Date
+                })
+            });
         }
 
-        private async void AggregateMarket(Market market)
+        private async Task AggregateMarket(Market market)
         {
+            
             var driver = _driverFactory.BuildDriver(market.AggregationDriver);
             var rateUpdates = await driver.Aggreagate(market.Currencies);
+
             var repo = _uow.GetRepository<CurrencyRate>();
             foreach (var entity in rateUpdates) {
                 await repo.CreateAsync(entity);
             }
+            await _uow.SaveAsync();
         }
     }
 }

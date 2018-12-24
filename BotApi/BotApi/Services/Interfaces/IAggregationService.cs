@@ -6,6 +6,6 @@ namespace BotApi.Services.Interfaces
 {
     public interface IAggregationService
     {
-        Task<List<RateUpdateDTO>> Aggregate();
+        Task<IEnumerable<RateUpdateDTO>> Aggregate();
     }
 }

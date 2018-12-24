@@ -36,6 +36,7 @@ namespace BotApi
 
             DAModule.ConfigureServices(services, Configuration);
             ServicesModule.ConfigureServices(services, Configuration);
+            AggregationModule.ConfigureDrivers(services, Configuration);
 
         }
 

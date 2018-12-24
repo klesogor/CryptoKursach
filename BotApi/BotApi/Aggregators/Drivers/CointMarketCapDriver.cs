@@ -22,7 +22,7 @@ namespace BotApi.Aggregators.Drivers
             _httpClient.DefaultRequestHeaders.Add("X-CMC_PRO_API_KEY", config.GetSection("Secrets:CMCToken").Value);
         }
 
-        public async Task<List<CurrencyRate>> Aggreagate(IEnumerable<CurrencyMarket> CurrencyIds)
+        public async Task<IEnumerable<CurrencyRate>> Aggreagate(IEnumerable<CurrencyMarket> CurrencyIds)
         {
             var data = await _httpClient.GetAsync("cryptocurrency/listings/latest?limit=200");
             if (!data.IsSuccessStatusCode) {
@@ -34,9 +34,10 @@ namespace BotApi.Aggregators.Drivers
             var result = new List<CurrencyRate>();
             foreach (var token in parser["data"].Children())
             {
-                var cm = CurrencyIds.First(c => c.MarketCurrencyId == token.Value<int>("id"));
+                var cm = CurrencyIds.FirstOrDefault(c => c.MarketCurrencyId == token.Value<int>("id"));
                 if (cm != null) {
                     result.Add(new CurrencyRate() {
+                        CurrencyId = cm.Id,
                         Date = date,
                         Rate = token["quote"]["USD"].Value<decimal>("price")
                     });

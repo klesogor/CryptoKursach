@@ -10,6 +10,7 @@ namespace BotApi.Services
         {
             services.AddScoped(typeof(ISubscriptionService), typeof(SubscriptionService));
             services.AddScoped(typeof(IUserService), typeof(UserService));
+            services.AddScoped(typeof(IAggregationService), typeof(AggregationService));
         }
     }
 }

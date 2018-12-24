@@ -8,6 +8,6 @@ namespace BotApi.Aggregators.Interfaces
 {
     public interface IAggregationDriver
     {
-        Task<List<CurrencyRate>> Aggreagate(IEnumerable<CurrencyMarket> CurrencyIds);
+        Task<IEnumerable<CurrencyRate>> Aggreagate(IEnumerable<CurrencyMarket> CurrencyIds);
     }
 }

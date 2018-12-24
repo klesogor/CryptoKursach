@@ -1,4 +1,5 @@
-﻿using System.ComponentModel.DataAnnotations.Schema;
+﻿using System.Collections.Generic;
+using System.ComponentModel.DataAnnotations.Schema;
 
 namespace BotApi.Data.Models
 {
@@ -10,6 +11,8 @@ namespace BotApi.Data.Models
 
         public int MarketId { get; set; }
         public virtual Market Market { get; set; }
+
+        public virtual List<CurrencyRate> Rates { get; set; }
 
         public int MarketCurrencyId { get; set; }
     }
