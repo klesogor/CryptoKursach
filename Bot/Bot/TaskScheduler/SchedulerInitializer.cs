@@ -27,7 +27,7 @@ namespace Bot.TaskScheduler
                 .Create()
                 .WithIdentity("aggregation", "major")
                 .StartNow()
-                .WithSimpleSchedule(s => s.WithIntervalInMinutes(1).RepeatForever())
+                .WithSimpleSchedule(s => s.WithIntervalInMinutes(5).RepeatForever())
                 .Build();
             await scheduler.ScheduleJob(details, trigger);
 

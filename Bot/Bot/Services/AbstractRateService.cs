@@ -23,8 +23,6 @@ namespace Bot.Services
                     $"Current rate: <b>{rate.Rate}</b>\n" +
                     $"Updated at: <b>{rate.UpdatedAt.ToShortTimeString()}</b>\n\n");
             }
-            //remove trailing slashes
-            builder.Remove(builder.Length - 2,1);
             return new Reply() { Text = builder.ToString() };
         }
     }

@@ -38,16 +38,16 @@ namespace Bot.APIs
 
         public Task<List<Market>> GetAvailableMarkets(int currencyId)
         {
-            return _cache.GetOrCreateAsync($"markets-{currencyId.ToString()}", (entry) =>
+            return _cache.GetOrCreateAsync($"markets-{currencyId}", (entry) =>
             {
                 entry.AbsoluteExpirationRelativeToNow = new TimeSpan(_cacheTTL);
                 return _api.GetAvailableMarkets(currencyId);
             });
         }
 
-        public Task<List<CurrencyRate>> GetCurrencyRate(int currencyId, int? marketId = null)
+        public Task<CurrencyRate> GetCurrencyRate(int currencyId, int marketId)
         {
-            return _cache.GetOrCreateAsync($"rate-{currencyId.ToString()}:{marketId?.ToString()}", (entry) =>
+            return _cache.GetOrCreateAsync($"rate-{currencyId}:{marketId}", (entry) =>
             {
                 entry.AbsoluteExpirationRelativeToNow = new TimeSpan(_cacheTTL);
                 return _api.GetCurrencyRate(currencyId, marketId);

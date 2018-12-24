@@ -10,7 +10,7 @@ namespace Bot
 {
     public class AppInitializer
     {
-        public  RateService RateService { get; set; }
+        public RateService RateService { get; set; }
         public SubscriptionService SubscriptionService { get; set; }
         public StartService StartService { get; set; }
         public AggregationService AggregationService { get; set; }
@@ -21,6 +21,7 @@ namespace Bot
             SubscriptionService =  new SubscriptionService(API);
             StartService = new StartService(API);
             AggregationService = new AggregationService(API);
+            RateService = new RateService(API);
 
             var router = new Router(new RouteExpressionParser());
             _bindRoutes(router);
@@ -36,6 +37,7 @@ namespace Bot
             router.Bind("/subscriptions", SubscriptionService.GetSubscriptions);
             router.Bind("/unsubscribe", SubscriptionService.GetSubscriptionsForUnsubscribe);
             router.Bind("/unsubscribe {currencyId}", SubscriptionService.Unsubscribe);
+            router.Bind("/rate {currencyId} {marketId}", RateService.GetRate);
         }
     }
 }
