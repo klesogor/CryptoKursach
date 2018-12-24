@@ -4,7 +4,7 @@ namespace Bot.Entities
 {
     public class RateUpdate
     {
-        public int UserChatId { get; set; }
+        public int UserId { get; set; }
         public IEnumerable<CurrencyRate> Rates { get; set; }
     }
 }

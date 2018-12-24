@@ -14,12 +14,18 @@ namespace Bot.TaskScheduler.Jobs
         private readonly IBot _bot;
         private readonly AggregationService _aggregationService;
 
+        public UpdateRateJob(IBot bot, AggregationService aggregationService)
+        {
+            _bot = bot;
+            _aggregationService = aggregationService;
+        }
+
         public async Task Execute(IJobExecutionContext context)
         {
             var updates = await _aggregationService.AggregateUpdates();
             foreach (var update in updates)
             {
-                _bot.SendMessage(update.UserChatId, _aggregationService.RenderRate(update.Rates.ToArray()));
+                _bot.SendMessage(update.UserId, _aggregationService.RenderRate(update.Rates.ToArray()));
             }
         }
     }

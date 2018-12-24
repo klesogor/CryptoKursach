@@ -15,15 +15,16 @@ namespace Bot.Services
         public virtual IReply RenderRate(params CurrencyRate[] rates)
         {
             var builder = new StringBuilder();
+            builder.Append("<pre>Most recent currency updates:</pre>");
             foreach (var rate in rates)
             {
-                builder.Append($"Currency:<pre>{rate.Currency.Name}</pre>\n" +
-                    $"Market: <pre>{rate.Market.Name}</pre>\n" +
-                    $"Current rate: <pre>{rate.Rate}</pre>\n" +
-                    $"Updated at: <pre>{rate.UpdatedAt.ToShortTimeString()}</pre>\n\n");
+                builder.Append($"Currency:<b>{rate.Currency.Name}</b>\n" +
+                    $"Market: <b>{rate.Market.Name}</b>\n" +
+                    $"Current rate: <b>{rate.Rate}</b>\n" +
+                    $"Updated at: <b>{rate.UpdatedAt.ToShortTimeString()}</b>\n\n");
             }
-            //remove last slashes
-            builder.Remove(builder.Length - 3,2);
+            //remove trailing slashes
+            builder.Remove(builder.Length - 2,1);
             return new Reply() { Text = builder.ToString() };
         }
     }

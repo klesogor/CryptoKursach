@@ -76,7 +76,7 @@ namespace Bot.Services
 
             var text = "This is your subscriptions. You can use keyboard below to check rate of any currency.\n" +
                 "<b>Your current subscriptions are:</b>\n";
-            text += string.Join('\n',res.Select(s => $" - <b>{s.Currency.Symbol}</b>@<b>{s.Currency.Name}</b>"));
+            text += string.Join('\n',res.Select(s => $" - <b>{s.Currency.Symbol}</b>@<b>{s.Market.Name}</b>"));
             var keyboard = new List<InlineKeyboardButton>();
 
             foreach (var subscription in res)

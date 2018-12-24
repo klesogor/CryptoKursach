@@ -10,15 +10,17 @@ namespace Bot
 {
     public class AppInitializer
     {
-        protected RateService RateService { get; set; }
-        protected SubscriptionService SubscriptionService { get; set; }
-        protected StartService StartService { get; set; }
+        public  RateService RateService { get; set; }
+        public SubscriptionService SubscriptionService { get; set; }
+        public StartService StartService { get; set; }
+        public AggregationService AggregationService { get; set; }
 
         public IRouter Init()
         {
             var API = new AspNetApi();
             SubscriptionService =  new SubscriptionService(API);
             StartService = new StartService(API);
+            AggregationService = new AggregationService(API);
 
             var router = new Router(new RouteExpressionParser());
             _bindRoutes(router);

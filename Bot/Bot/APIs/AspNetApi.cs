@@ -121,7 +121,7 @@ namespace Bot.APIs
 
         public async Task<List<RateUpdate>> AggregateUpdates()
         {
-            var result = await _http.GetAsync("/aggregate");
+            var result = await _http.PostAsync("aggregate",null);
             var resultString = await result.Content.ReadAsStringAsync();
             if (!result.IsSuccessStatusCode)
             {
