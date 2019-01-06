@@ -14,6 +14,7 @@ namespace Bot
         public SubscriptionService SubscriptionService { get; set; }
         public StartService StartService { get; set; }
         public AggregationService AggregationService { get; set; }
+        public ChartService ChartService { get; set; }
 
         public IRouter Init()
         {
@@ -22,6 +23,7 @@ namespace Bot
             StartService = new StartService(API);
             AggregationService = new AggregationService(API);
             RateService = new RateService(API);
+            ChartService = new ChartService(API);
 
             var router = new Router(new RouteExpressionParser());
             _bindRoutes(router);
@@ -30,6 +32,8 @@ namespace Bot
 
         protected virtual void _bindRoutes(IRouter router)
         {
+            router.Bind("/chart {currencyId}", ChartService.GetAvailableCurrencies);
+            router.Bind("/chart {currencyId} {marketId}", ChartService.GetChart);
             router.Bind("/subscribe", SubscriptionService.GetAvailableCurrencies);
             router.Bind("/subscribe {currencyId}", SubscriptionService.GetAwailableMarketsByCurrency);
             router.Bind("/subscribe {currencyId} {marketId}", SubscriptionService.Subscribe);

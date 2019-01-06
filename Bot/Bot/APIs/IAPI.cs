@@ -9,6 +9,7 @@ namespace Bot.APIs
 {
     public interface IAPI
     {
+        Task<Chart> GetChart(int currencyId, int marketId);
         Task Subscribe(int userId, int currencyId, int marketId);
         Task Unsubscribe(int userId, int currencyId);
         Task<List<Currency>> GetAvailableCurrencies();

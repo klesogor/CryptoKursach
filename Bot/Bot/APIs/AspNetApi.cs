@@ -57,6 +57,19 @@ namespace Bot.APIs
             return JsonConvert.DeserializeObject<CurrencyRate>(resultString);
         }
 
+        public async Task<Chart> GetChart(int currencyId, int marketId)
+        {
+            var result = await _http.GetAsync($"chart/{currencyId}/{marketId}");
+            var resultString = await result.Content.ReadAsStringAsync();
+            if (!result.IsSuccessStatusCode)
+            {
+                throw new ApiException(resultString);
+            }
+
+            return JsonConvert.DeserializeObject<Chart>(resultString);
+        }
+
+
         public async Task<List<Subscription>> GetSubscriptions(int chatId)
         {
             var httpRequestMessage = new HttpRequestMessage
