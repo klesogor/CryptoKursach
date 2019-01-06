@@ -36,6 +36,15 @@ namespace Bot.APIs
             });
         }
 
+        public Task<List<Currency>> GetAvailableChartCurrencies()
+        {
+            return _cache.GetOrCreateAsync(currencyListKey, (entry) =>
+            {
+                entry.AbsoluteExpirationRelativeToNow = new TimeSpan(_cacheTTL);
+                return _api.GetAvailableCurrencies();
+            });
+        }
+
         public Task<List<Market>> GetAvailableMarkets(int currencyId)
         {
             return _cache.GetOrCreateAsync($"markets-{currencyId}", (entry) =>
@@ -57,6 +66,15 @@ namespace Bot.APIs
         public  Task Start(int userId, string userName)
         {
             return _api.Start(userId,userName);
+        }
+
+        public Task<Chart> GetChart(int currencyId, int marketId)
+        {
+            return _cache.GetOrCreateAsync($"chart-{currencyId}:{marketId}", (entry) =>
+            {
+                entry.AbsoluteExpirationRelativeToNow = new TimeSpan(_cacheTTL);
+                return _api.GetChart(currencyId, marketId);
+            });
         }
 
         public Task<List<Subscription>> GetSubscriptions(int chatId)

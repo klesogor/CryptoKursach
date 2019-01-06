@@ -43,7 +43,7 @@ namespace Bot.Services
 
                 return new MenuReply() {
                     Markup = new InlineKeyboardMarkup(keyboard),
-                    Text = "<b>Currenies list:</b>"
+                    Text = "<b>Currencies list:</b>"
                 };
         }
 
