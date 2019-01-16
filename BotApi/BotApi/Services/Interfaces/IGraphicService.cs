@@ -8,6 +8,6 @@ namespace CurrencyBot
 {
     interface IGraphicService
     {
-        void GetGraphic(List<CurrencyRateDTO> listRate);
+        ChartDTO GetGraphic(List<ChartDataDTO> listRate);
     }
 }

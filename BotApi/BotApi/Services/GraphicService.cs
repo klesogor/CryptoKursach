@@ -6,11 +6,11 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace CurrencyBot
+namespace BotApi.DTO
 {
-    class GraphicService : IGraphicService
+    public class GraphicService : IGraphicService
     {
-        public void GetGraphic(List<CurrencyRateDTO> rates)
+        public ChartDTO GetGraphic(List<ChartDataDTO> rates)
         {
             Bitmap bitmap = new Bitmap(Convert.ToInt32(2160), Convert.ToInt32(2048), PixelFormat.Format32bppArgb);
             Graphics graph = Graphics.FromImage(bitmap);
@@ -18,7 +18,8 @@ namespace CurrencyBot
             DrawAxes(graph);
 
             //це вся відстань осі Х
-            TimeSpan MainSpan = (rates[rates.Count - 1].UpdatedAt - rates[0].UpdatedAt);
+            if (rates == null) return null;
+            TimeSpan MainSpan = (rates[rates.Count - 1].Date - rates[0].Date);
 
             //шукаються точки і рисується дата на осі Х
             //1980 - початок осі y знизу
@@ -27,21 +28,23 @@ namespace CurrencyBot
             int j = 0;
             foreach (var item in rates)
             {
-                float a = (item.UpdatedAt - rates[0].UpdatedAt).Days;
+                float a = (item.Date - rates[0].Date).Days;
                 float b = a / MainSpan.Days;
-                points[j] = new PointF( b * 1945 + 55, (float)(1980 - item.Rate * 2));
+                points[j] = new PointF( b * 1945 + 55, (float)(1980 - item.Price * 2));
 
-                graph.DrawString(item.UpdatedAt.ToString("dd/MM/yyyy"), new Font("Arial", 20), new SolidBrush(Color.Black), new PointF(b * 1945 + 30, 1990));
+                graph.DrawString(item.Date.ToString("dd/MM/yyyy"), new Font("Arial", 20), new SolidBrush(Color.Black), new PointF(b * 1945 + 30, 1990));
                 j++;
             }
             graph.DrawLines(new Pen(Color.Black, 2), points);
 
-            CurrencyDTO cur = new CurrencyDTO();
-            cur.ImageUrl = @"E:\Рабочий стол\Програмування\Галушко\CurrencyBot\test.png";
-            bitmap.Save(cur.ImageUrl, ImageFormat.Png);
+            ChartDTO chart = new ChartDTO();
+            chart.ImageUrl = @"E:\Рабочий стол\Програмування\Галушко\CurrencyBot\test.png";
+            bitmap.Save(chart.ImageUrl, ImageFormat.Png);
+
+            return chart;
         }
 
-        public void DrawAxes(Graphics graph)
+        private void DrawAxes(Graphics graph)
         {
             graph.DrawLine(new Pen(Color.Black, 2), 55, 20, 55, 1980);
             graph.DrawLine(new Pen(Color.Black, 2), 55, 1980, 2160, 1980);
