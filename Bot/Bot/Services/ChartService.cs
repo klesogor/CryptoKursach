@@ -18,29 +18,7 @@ namespace Bot.Services
 
         }
 
-        public async Task<IReply> GetAvailableCurrencies(ParameterBag bag, Chat chat)
-        {
-            var res = await _api.GetAvailableCurrencies();
-
-            var keyboard = new List<InlineKeyboardButton>();
-
-            foreach (var currency in res)
-            {
-                keyboard.Add(new InlineKeyboardButton()
-                {
-                    CallbackData = $"/chart{currency.Id}",
-                    Text = currency.Name
-                });
-            }
-
-            return new MenuReply()
-            {
-                Markup = new InlineKeyboardMarkup(keyboard),
-                Text = "You can use keyboard below to show a chart of currency" +
-                "<b>Currencies list are:</b>"
-            };
-        }
-        public async Task<IReply> GetChart(ParameterBag bag, Chat chat)
+        public async Task<IReply> GetCurrencyListForCharts(ParameterBag bag, Chat chat)
         {
             var res = await _api.GetSubscriptions((int)chat.Id);
 
@@ -61,6 +39,19 @@ namespace Bot.Services
             {
                 Markup = new InlineKeyboardMarkup(keyboard),
                 Text = text
+            };
+        }
+
+        public async Task<IReply> GetChart(ParameterBag bag, Chat chat)
+        {
+            var res = await _api.GetChart(
+                    int.Parse(bag.GetObjectAsString("currencyId")),
+                    int.Parse(bag.GetObjectAsString("marketId"))
+                );
+
+            return new ImageReply() {
+                Caption = $"Latest chart for {res.Currency.Name} at {res.Market.Name}",
+                ImageUrl = res.ChartUrl
             };
         }
     }

@@ -32,8 +32,7 @@ namespace Bot
 
         protected virtual void _bindRoutes(IRouter router)
         {
-            router.Bind("/chart {currencyId}", ChartService.GetAvailableCurrencies);
-            router.Bind("/chart {currencyId} {marketId}", ChartService.GetChart);
+            router.Bind("/chart", ChartService.GetCurrencyListForCharts);
             router.Bind("/subscribe", SubscriptionService.GetAvailableCurrencies);
             router.Bind("/subscribe {currencyId}", SubscriptionService.GetAwailableMarketsByCurrency);
             router.Bind("/subscribe {currencyId} {marketId}", SubscriptionService.Subscribe);

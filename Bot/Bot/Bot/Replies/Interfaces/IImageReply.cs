@@ -1,11 +1,8 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Text;
-
-namespace Bot.Bot.Replies.Interfaces
+﻿namespace Bot.Bot.Replies.Interfaces
 {
-    public interface IImageReply: ITextReply
+    public interface IImageReply: IReply
     {
         string ImageUrl { get; set; }
+        string Caption { get; set; }
     }
 }

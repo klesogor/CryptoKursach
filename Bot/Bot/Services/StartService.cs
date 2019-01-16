@@ -20,8 +20,8 @@ namespace Bot.Services
             return new Reply()
             {
                 Text = "<b>Welcome to CryptoBot</b>.\n" +
-                "First, you should subscribe for currency updates using /subscribe. Then you will start" +
-                "to recive notifications"
+                "First, you should subscribe for currency updates using /subscribe. Then you will automaticly" +
+                "recive notifications"
             };
         }    
     }

@@ -2,20 +2,28 @@
 using System;
 using Telegram.Bot;
 using Telegram.Bot.Types;
+using Telegram.Bot.Types.Enums;
 
 namespace Bot.Bot.Replies
 {
     class Renderer : IResponseRenderer
     {
         private readonly ITelegramBotClient _bot;
+        private const ParseMode _parseMode = ParseMode.Html;
+
         public Renderer(ITelegramBotClient client)
         {
             _bot = client;
         }
 
-        public void RenderImage(IImageReply reply, int chatId)
+        public async void RenderImage(IImageReply reply, int chatId)
         {
-            throw new NotImplementedException();
+            await _bot.SendPhotoAsync(
+                chatId: new ChatId(chatId),
+                photo: reply.ImageUrl,
+                caption: reply.Caption,
+                parseMode: _parseMode
+               );
         }
 
         public async void RenderMenu(IMenuReply reply, int chatId)
@@ -24,7 +32,7 @@ namespace Bot.Bot.Replies
                 chatId: new ChatId(chatId),
                 text: reply.Text,
                 replyMarkup: reply.Markup,
-                parseMode: Telegram.Bot.Types.Enums.ParseMode.Html
+                parseMode: _parseMode
                 );
         }
 
@@ -33,7 +41,7 @@ namespace Bot.Bot.Replies
             await _bot.SendTextMessageAsync(
                chatId: new ChatId(chatId),
                text: reply.Text,
-               parseMode: Telegram.Bot.Types.Enums.ParseMode.Html
+               parseMode: _parseMode
                );
         }
     }
