@@ -1,8 +1,4 @@
 using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace BotApi.DTO
 {
@@ -10,6 +6,6 @@ namespace BotApi.DTO
     {
         public float Price { get; set; }
 
-        DateTime Date { get; set; }
+        public DateTime Date { get; set; }
     }
 }
