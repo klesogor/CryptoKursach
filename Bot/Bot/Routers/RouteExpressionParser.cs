@@ -7,7 +7,7 @@ using System.Linq;
 
 namespace Bot.Routers
 {
-    sealed class RouteExpressionParser: IRouterExpressionParser 
+    public sealed class RouteExpressionParser: IRouterExpressionParser 
     {
         private readonly string commandPattern = @"^\/?(?<command>\w+)(?:(?<arguments>[\w\d {}=_]*))$";
         private readonly string argumentPattern = @"^(?<name>--\w+=)?{(?<argument>\w+)}$";

@@ -4,7 +4,7 @@ using System.Text;
 
 namespace Bot.Exceptions
 {
-    class RouteException : DomainException
+    public class RouteException : DomainException
     {
         public RouteException():base("Incorrect route format") { }
     }
